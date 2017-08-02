@@ -1,8 +1,26 @@
+import {createUUID} from './Tools';
+
 class ImageLoader {
+
     constructor() {
+        /**
+         * mapper
+         * {
+         *     url or alias: uuid: String
+         * }
+         */
         this.mapper = {};
+        /**
+         * images
+         * {
+         *     uuid: {
+         *         status: Number [0: 加载完成 1; 加载中 2+:加载出现错误]
+         *         target: Object
+         *         callback: Array
+         *     }
+         * }
+         */
         this.images = {};
-        console.log(this.createUUID());
     }
 
     destroy() {
@@ -10,21 +28,15 @@ class ImageLoader {
         delete this.images;
     }
 
-    createUUID() {
-        let uuid = [];
-        let hexDigits = '0123456789abcdef';
-        for (let i = 0; i < 36; i++) {
-            uuid[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    getImage(...alias) {
+        let obj = this.readCache.apply(this, alias);
+        if (obj && obj.status === 0) {
+            return obj.image;
         }
-
-        uuid[14] = '4';
-        uuid[19] = hexDigits.substr((uuid[19] & 0x3) | 0x8, 1);
-        uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
-
-        return uuid.join('');
+        return null;
     }
 
-    read(...alias) {
+    readCache(...alias) {
         if (alias.length > 0) {
             for (let i = 0, l = alias.length, uuid; i < l; i++) {
                 uuid = this.mapper[alias[i]];
@@ -40,35 +52,61 @@ class ImageLoader {
         return null;
     }
 
-    load(url, callback, alias) {
+    load(url, callback, ...alias) {
         if (url === undefined) {
             console.warn('image src is undefined.');
-            return;
+            return false;
         }
-        if (this.mapper[url] !== undefined) {
-            callback && callback(this.read(url));
-            return;
-        }
-        if (alias) {
-            if (this.mapper[alias] !== undefined) {
-                callback && callback(this.read(alias));
-                return;
+        let target = this;
+        let obj = this.readCache.apply(target, [url, ...alias]);
+        if (obj) {
+            let arg = {
+                code: obj.status,
+                target: obj.target
+            };
+            if (obj.status === 0) {
+                callback && callback(arg);
+                return true;
+            } else if (obj.status === 1) {
+                obj.callback.push(callback);
+                return true;
+            } else {
+                callback && callback(arg);
+                return false;
             }
         }
-        ((url, callback, alias) => {
-            let image = new Image();
-            image.onload = () => {
-                let uuid = this.createUUID();
-                this.images[uuid] = image;
-                this.mapper[url] = uuid;
-                alias && (this.mapper[alias] = uuid);
-                callback && callback(image);
-            };
-            image.onerror = () => {
-                console.log(`load image(${url}) error.`);
-            };
-            image.src = url;
-        })(url, callback, alias);
+
+        let uuid = createUUID();
+        let image = new Image();
+        this.images[uuid] = {
+            status: 1,
+            target: image,
+            callback: [callback]
+        };
+        this.mapper[url] = uuid;
+        if (alias.length > 0) {
+            alias.forEach(k => {
+                this.mapper[k] = uuid;
+            });
+        }
+        image.onload = () => {
+            let elem = this.images[uuid];
+            elem.status = 0;
+            let func = elem.callback.shift();
+            while (func) {
+                func && func({
+                    code: 0,
+                    target: elem.target
+                });
+                func = elem.callback.shift();
+            }
+        };
+        image.onerror = () => {
+            this.images[uuid].status = 2;
+            console.log('load image error', url);
+        };
+        image.src = url;
+        return true;
     }
 }
 

@@ -10,8 +10,8 @@ class Rect extends Base {
         let canvas = this.canvas;
         let context = canvas.getContext('2d');
 
-        let width = this.width;
-        let height = this.height;
+        let width = this.canvas.width;
+        let height = this.canvas.height;
 
         context.save();
         context.beginPath();

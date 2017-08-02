@@ -32,30 +32,48 @@ class Base {
         return true;
     }
 
+    clearCanvas() {
+        this.getBaseContext().clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
     setWidth(width) {
         width = Math.floor(width);
         this.width = width;
+        return this;
+    }
+
+    setCanvasWidth(width) {
+        width = Math.floor(width);
         this.canvas.width = width;
+        return this;
     }
 
     setHeight(height) {
         height = Math.floor(height);
         this.height = height;
+        return this;
+    }
+
+    setCanvasHeight(height) {
+        height = Math.floor(height);
         this.canvas.height = height;
+        return this;
     }
 
     setRadius(topLeft, topRight, bottomLeft, bottomRight) {
-        this.radius.topLeft = topLeft || 0;
-        this.radius.topRight = topRight || 0;
-        this.radius.bottomLeft = bottomLeft || 0;
-        this.radius.bottomRight = bottomRight || 0;
+        this.radius.topLeft = ~~topLeft || 0;
+        this.radius.topRight = ~~topRight || 0;
+        this.radius.bottomLeft = ~~bottomLeft || 0;
+        this.radius.bottomRight = ~~bottomRight || 0;
+        return this;
     }
 
     setPadding(top, right, bottom, left) {
-        this.padding.top = top || 0;
-        this.padding.right = right || 0;
-        this.padding.bottom = bottom || 0;
-        this.padding.left = left || 0;
+        this.padding.top = ~~top || 0;
+        this.padding.right = ~~right || 0;
+        this.padding.bottom = ~~bottom || 0;
+        this.padding.left = ~~left || 0;
+        return this;
     }
 
     onDraw(canvas) {
