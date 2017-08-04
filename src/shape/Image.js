@@ -37,6 +37,7 @@ class ImageShape extends Rect {
                 func && func(this);
                 func = this.callbacks.success.shift();
             }
+            this.needsRedraw();
         });
         return this;
     }

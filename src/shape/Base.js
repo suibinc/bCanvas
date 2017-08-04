@@ -1,6 +1,7 @@
 class Base {
     constructor(x, y, width, height) {
-        this.redraw = true;
+        this.parent = null;
+        this.needsUpdate = true;
         this.x = x || 0;
         this.y = y || 0;
         this.width = width || 0;
@@ -23,12 +24,21 @@ class Base {
         this.canvas.height = height;
     }
 
+    setParent(parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    needsRedraw() {
+        this.needsUpdate = true;
+        this.parent && this.parent.needsRedraw && this.parent.needsRedraw();
+    }
+
     draw() {
-        if (!this.redraw) {
-            // 控制重绘，避免频繁的重绘带来的压力
+        if (!this.needsUpdate) {
             return false;
         }
-        this.redraw = this.onDraw(this.canvas);
+        this.needsUpdate = this.onDraw(this.canvas);
         return true;
     }
 
