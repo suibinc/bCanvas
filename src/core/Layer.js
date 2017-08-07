@@ -36,6 +36,8 @@ class Layer {
         }
         this.needsUpdate = false;
 
+        let opacity = 1;
+
         let context = this.canvas.getContext('2d');
         context.clearRect(0, 0, this.width, this.height);
         this.group.forEach(elem => {
@@ -45,7 +47,11 @@ class Layer {
             if (elem.canvas !== undefined && elem.canvas !== null) {
                 let animator = elem.animator;
                 let frame = animator.nextFrame(delta);
-                context.drawImage(elem.canvas, frame.x, frame.y, elem.width, elem.height);
+                if (opacity !== frame.opacity) {
+                    context.globalAlpha = frame.opacity;
+                    opacity = frame.opacity;
+                }
+                context.drawImage(elem.canvas, frame.x, frame.y, frame.width, frame.height);
                 this.needsUpdate = this.needsUpdate || !animator.isEnd();
             }
         });

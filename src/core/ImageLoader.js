@@ -1,4 +1,4 @@
-import {createUUID} from './Tools';
+import {createUUID} from './Utils';
 
 class ImageLoader {
 

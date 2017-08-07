@@ -1,4 +1,4 @@
-import {createUUID} from './core/Tools';
+import {createUUID} from './core/Utils';
 import Director from './core/Director';
 
 let instances = {};

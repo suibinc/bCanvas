@@ -13,21 +13,25 @@ imageView1.setRadius(30, 30, 0, 0)
         duration: 2000,
         from: {
             x: 20,
-            y: 20
+            y: 20,
+            scale: 0
         },
         to: {
             x: 200,
-            y: 200
+            y: 200,
+            scale: 1
         }
     }).animate({
         duration: 1500,
         from: {
             x: 200,
-            y: 200
+            y: 200,
+            opacity: 1
         },
         to: {
             x: 400,
-            y: 200
+            y: 200,
+            opacity: 0.2
         }
     }).$click(e => {
         console.log('click image1');

@@ -1,4 +1,4 @@
-import {raf, throttle} from './Tools';
+import {raf, throttle} from './Utils';
 import Event from './Events';
 import Layer from './Layer';
 
