@@ -45,6 +45,7 @@ class ImageShape extends Rect {
     then(suc, err) {
         suc && this.callbacks.success.push(suc);
         err && this.callbacks.success.push(err);
+        return this;
     }
 
     fillImage(image) {

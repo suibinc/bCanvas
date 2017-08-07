@@ -45,8 +45,8 @@ class Layer {
             if (elem.canvas !== undefined && elem.canvas !== null) {
                 let animator = elem.animator;
                 let frame = animator.nextFrame(delta);
-                context.drawImage(elem.canvas, frame.x, elem.getY(), elem.width, elem.height);
-                this.needsUpdate = !animator.isEnd();
+                context.drawImage(elem.canvas, frame.x, frame.y, elem.width, elem.height);
+                this.needsUpdate = this.needsUpdate || !animator.isEnd();
             }
         });
         return this.needsUpdate;

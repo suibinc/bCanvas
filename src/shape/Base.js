@@ -50,12 +50,10 @@ class Base {
         this.getBaseContext().clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    getX() {
-        return this.x;
-    }
-
-    getY() {
-        return this.y;
+    animate(keyframes) {
+        this.animator.addAnimation(keyframes);
+        this.parent && this.parent.needsRedraw && this.parent.needsRedraw();
+        return this;
     }
 
     setWidth(width) {
@@ -121,6 +119,7 @@ class Base {
 
     $click(callback) {
         this.$clickEvent = callback;
+        return this;
     }
 }
 
