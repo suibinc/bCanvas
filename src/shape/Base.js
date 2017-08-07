@@ -46,6 +46,14 @@ class Base {
         this.getBaseContext().clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.x;
+    }
+
     setWidth(width) {
         width = Math.floor(width);
         this.width = width;
@@ -96,6 +104,19 @@ class Base {
 
     getBaseContext() {
         return this.canvas.getContext('2d');
+    }
+
+    inArea(x, y, e) {
+        if (this.x <= x && this.x + this.width >= x) {
+            if (this.y <= y && this.y + this.height >= y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    $click(callback) {
+        this.$clickEvent = callback;
     }
 }
 

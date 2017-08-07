@@ -1,4 +1,5 @@
 import {raf, throttle} from './Tools';
+import Event from './Events';
 import Layer from './Layer';
 
 class Director {
@@ -35,6 +36,18 @@ class Director {
         this.updateWithThrottle = throttle(() => {
             this.update();
         }, 100);
+
+        Event.bind(elem, e => {
+            let keys = Object.keys(this.layers);
+            keys.sort((a, b) => {
+                return b - a;
+            });
+            keys.forEach(key => {
+                let layer = this.layers[key];
+                layer.$dispatch(e);
+            });
+        });
+        return this;
     }
 
     needsRedraw() {

@@ -1,3 +1,4 @@
+var glob = require('glob')
 var path = require('path')
 var config = require('../config/index')
 
@@ -12,10 +13,18 @@ function assetsPath(_path) {
     return path.posix.join(assetsSubDirectory, _path)
 }
 
+const entries = {}
+const chunks = []
+glob.sync('./demo/**/index.js').forEach(path => {
+    var suffix = path.split('./demo/')[1].split('/')
+    const chunk = 'demo/' + suffix[0] + '/index'
+    entries[chunk] = path
+    chunks.push(chunk)
+})
+entries['b-canvas'] = './src/bCanvas.js'
+
 module.exports = {
-    entry: {
-        'b-canvas': './src/bCanvas.js'
-    },
+    entry: entries,
     output: {
         path: config.build.assetsRoot,
         filename: '[name].js',

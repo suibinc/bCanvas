@@ -17,6 +17,14 @@ class Layer {
         return this;
     }
 
+    $dispatch(e) {
+        for (let i = this.group.length - 1; i >= 0; i--) {
+            if (this.group[i].inArea(e.offsetX, e.offsetY, e)) {
+                this.group[i].$clickEvent && this.group[i].$clickEvent(e);
+            }
+        }
+    }
+
     needsRedraw() {
         this.needsUpdate = true;
         this.parent && this.parent.needsRedraw && this.parent.needsRedraw();

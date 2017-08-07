@@ -19,9 +19,9 @@ module.exports = merge(baseWebpackConfig, {
         new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'demo/index.html',
+            template: 'demo/index/index.html',
             inject: true,
-            chunks: ['b-canvas']
+            chunks: ['demo/index/index']
         }),
         new FriendlyErrorsPlugin()
     ]
