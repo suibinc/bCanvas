@@ -1,3 +1,5 @@
+import Animator from '../core/Animator';
+
 class Base {
     constructor(x, y, width, height) {
         this.parent = null;
@@ -22,6 +24,8 @@ class Base {
         this.canvas = document.createElement('canvas');
         this.canvas.width = width;
         this.canvas.height = height;
+
+        this.animator = new Animator(this);
     }
 
     setParent(parent) {
@@ -51,7 +55,7 @@ class Base {
     }
 
     getY() {
-        return this.x;
+        return this.y;
     }
 
     setWidth(width) {

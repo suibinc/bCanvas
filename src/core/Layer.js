@@ -30,7 +30,7 @@ class Layer {
         this.parent && this.parent.needsRedraw && this.parent.needsRedraw();
     }
 
-    update() {
+    update(delta) {
         if (!this.needsUpdate) {
             return false;
         }
@@ -39,12 +39,17 @@ class Layer {
         let context = this.canvas.getContext('2d');
         context.clearRect(0, 0, this.width, this.height);
         this.group.forEach(elem => {
-            elem.draw && elem.draw();
+            if (elem.draw) {
+                this.needsUpdate = this.needsUpdate || elem.draw();
+            }
             if (elem.canvas !== undefined && elem.canvas !== null) {
-                context.drawImage(elem.canvas, elem.x, elem.y, elem.width, elem.height);
+                let animator = elem.animator;
+                let frame = animator.nextFrame(delta);
+                context.drawImage(elem.canvas, frame.x, elem.getY(), elem.width, elem.height);
+                this.needsUpdate = !animator.isEnd();
             }
         });
-        return true;
+        return this.needsUpdate;
     }
 
     addView(child) {

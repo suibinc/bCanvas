@@ -33,9 +33,9 @@ class Director {
         this.onScreenRender = this.onScreenCanvas.getContext('2d');
         this.__checkOffScreenCanvas();
 
-        this.updateWithThrottle = throttle(() => {
-            this.update();
-        }, 100);
+        this.updateFpsWithThrottle = throttle((delta) => {
+            this.runStatus.fps = (1000 / delta).toFixed(2);
+        }, 200);
 
         Event.bind(elem, e => {
             let keys = Object.keys(this.layers);
@@ -54,7 +54,7 @@ class Director {
         this.needsUpdate = true;
     }
 
-    update() {
+    update(delta) {
         if (!this.needsUpdate) {
             this.draw();
             return false;
@@ -69,7 +69,7 @@ class Director {
         });
         keys.forEach(key => {
             let layer = this.layers[key];
-            layer.update();
+            this.needsUpdate = this.needsUpdate || layer.update(delta);
             this.offScreenRender.drawImage(layer.canvas, layer.x, layer.y, layer.width, layer.height);
         });
         this.draw();
@@ -81,21 +81,22 @@ class Director {
         this.onScreenRender.fillText('FPS : ' + this.runStatus.fps, 20, 20);
     }
 
-    loop() {
+    loop(delta = 0) {
         if (!this.runStatus.pause) {
-            this.updateWithThrottle();
+            this.update(delta);
         }
         raf((t) => {
-            this.runStatus.fps = (1000 / (t - this.lastTime)).toFixed(2);
-            // console.log(this.runStatus.fps);
+            let delta = t - this.lastTime;
+            this.updateFpsWithThrottle(delta);
             this.lastTime = t;
-            this.loop();
+            this.loop(delta);
         });
     }
 
     start() {
         if (this.runStatus.loop) {
             console.log('loop is running.');
+
             return;
         }
         this.runStatus.loop = true;
