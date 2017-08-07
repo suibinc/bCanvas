@@ -27,14 +27,11 @@ class Base {
 
         this.animator = new Animator(this);
         this.animator.$animationEnd(stat => {
-            console.log('animation end');
-            if (stat.save) {
-                this.x = stat.x;
-                this.y = stat.y;
-                this.width = stat.width;
-                this.height = stat.height;
-                this.opacity = stat.opacity;
-            }
+            this.x = stat.x;
+            this.y = stat.y;
+            this.width = stat.width;
+            this.height = stat.height;
+            this.opacity = stat.opacity;
         });
     }
 

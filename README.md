@@ -16,21 +16,25 @@ imageView1.setRadius(30, 30, 0, 0) // 设置各个方向的圆角
     .then(target => {
         // 图片加载完成后的回调
         console.log('load image1 done', target);
-    }).animate({ // 动画队列，animate会在执行完一个动画后再执行下一个动画，支持动画结束回调
+    })
+    .animate({ // 动画队列，animate会在执行完一个动画后再执行下一个动画，支持动画结束回调
         // 动画支持的属性有[x, y, width, height, scale, opacity]
         // 后续将会加入更多属性支持
         duration: 2000, //动画时长
-        from: { // 开始状态
+        from: {
+            // 开始状态
             x: 20,
             y: 20,
             scale: 0
         },
-        to: { // 结束状态
+        to: {
+            // 结束状态
             x: 200,
             y: 200,
             scale: 1
         }
-    }).animate({
+    })
+    .animate({
         duration: 1500,
         from: {
             x: 200,
@@ -42,7 +46,8 @@ imageView1.setRadius(30, 30, 0, 0) // 设置各个方向的圆角
             y: 200,
             opacity: 0.2
         }
-    }).$click(e => {
+    })
+    .$click(e => {
         console.log('click image1');
     });
 director.addView(imageView1);
